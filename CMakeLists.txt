@@ -28,6 +28,7 @@ project(vtbx VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 
 set(VTBX_LIB vtbx)
+set(VTBX_CONFIG_NAME Vtbx)
 
 set(CUSTOM_C_FLAGS
   -Wall
@@ -48,30 +49,78 @@ if (CMAKE_C_COMPILER_ID MATCHES "GNU")
 endif ()
 
 # ------------------------------------------------------------------------------
-# Sources.
+# Sources & binary.
 # ------------------------------------------------------------------------------
-
-include_directories(include)
 
 set(SOURCES
   src/io.c
   src/network.c
   src/string.c
 )
+add_library(${VTBX_LIB} SHARED ${SOURCES})
 
-# ------------------------------------------------------------------------------
-# Binary.
-# ------------------------------------------------------------------------------
+target_include_directories(${VTBX_LIB}
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 add_compile_options(${CUSTOM_C_FLAGS})
 
-add_library(${VTBX_LIB} SHARED ${SOURCES})
-set_property(TARGET ${VTBX_LIB} PROPERTY LINKER_LANGUAGE C)
-set_property(TARGET ${VTBX_LIB} PROPERTY VERSION ${PROJECT_VERSION})
+set_target_properties(${VTBX_LIB} PROPERTIES
+  LINKER_LANGUAGE C
+  VERSION ${PROJECT_VERSION}
+  EXPORT_NAME ${VTBX_CONFIG_NAME}
+)
+
+# ------------------------------------------------------------------------------
+# Install.
+# ------------------------------------------------------------------------------
 
 include(GNUInstallDirs)
 
+set(VTBX_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${VTBX_CONFIG_NAME})
+set(VTBX_TARGETS ${VTBX_LIB}-targets)
+
+set(VTBX_TARGETS_FILE ${VTBX_CONFIG_NAME}Targets.cmake)
+set(VTBX_CONFIG_FILE ${VTBX_CONFIG_NAME}Config.cmake)
+set(VTBX_CONFIG_VERSION_FILE ${VTBX_CONFIG_NAME}ConfigVersion.cmake)
+
 install(TARGETS ${VTBX_LIB}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  EXPORT ${VTBX_TARGETS}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT ${VTBX_TARGETS}
+  FILE ${VTBX_TARGETS_FILE}
+  NAMESPACE ${VTBX_CONFIG_NAME}::
+  DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_VERSION_FILE}
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config/${VTBX_CONFIG_FILE}.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_FILE}
+  INSTALL_DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_FILE}
+  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_VERSION_FILE}
+  DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+)
+
+export(EXPORT ${VTBX_TARGETS} FILE ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_TARGETS_FILE} NAMESPACE ${VTBX_CONFIG_NAME}::)
+
+export(PACKAGE ${VTBX_CONFIG_NAME})
