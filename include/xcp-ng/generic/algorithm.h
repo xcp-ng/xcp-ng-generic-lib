@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-#include "xcp-ng-generic/global.h"
+#include "xcp-ng/generic/global.h"
 
 // =============================================================================
 

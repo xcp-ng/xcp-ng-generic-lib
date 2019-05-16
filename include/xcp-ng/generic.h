@@ -14,30 +14,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_NETWORK_H_
-#define _XCP_NG_GENERIC_NETWORK_H_
+#ifndef _XCP_NG_GENERIC_H_
+#define _XCP_NG_GENERIC_H_
 
-#include <sys/socket.h>
-#include <sys/un.h>
-
-#include "xcp-ng-generic/global.h"
+#include "generic/algorithm.h"
+#include "generic/io.h"
+#include "generic/network.h"
+#include "generic/string.h"
 
 // =============================================================================
 
-#ifdef __cplusplus
-extern "C" {
-#endif // ifdef __cplusplus
-
-#define XCP_SOCK_UNIX_PATH_MAX \
-  XCP_MEMBER_SIZE(struct sockaddr_un, sun_path) / \
-  XCP_MEMBER_SIZE(struct sockaddr_un, sun_path[0])
-
-XcpError xcp_sock_connect (int sock, const struct sockaddr *addr, socklen_t addrlen);
-
-XcpError xcp_sock_send_shared_fd (int sock, const void *buf, size_t count, int sharedFd);
-
-#ifdef __cplusplus
-}
-#endif // ifdef __cplusplus
-
-#endif // _XCP_NG_GENERIC_NETWORK_H_ included
+#endif // _XCP_NG_GENERIC_H_ included

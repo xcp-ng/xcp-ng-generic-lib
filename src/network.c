@@ -17,8 +17,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "xcp-ng-generic/io.h"
-#include "xcp-ng-generic/network.h"
+#include "xcp-ng/generic/io.h"
+#include "xcp-ng/generic/network.h"
 
 // =============================================================================
 

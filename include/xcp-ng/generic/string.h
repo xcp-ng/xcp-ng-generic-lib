@@ -14,14 +14,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_H_
-#define _XCP_NG_GENERIC_H_
+#ifndef _XCP_NG_GENERIC_STRING_H_
+#define _XCP_NG_GENERIC_STRING_H_
 
-#include "xcp-ng-generic/algorithm.h"
-#include "xcp-ng-generic/io.h"
-#include "xcp-ng-generic/network.h"
-#include "xcp-ng-generic/string.h"
+#include "xcp-ng/generic/global.h"
 
 // =============================================================================
 
-#endif // _XCP_NG_GENERIC_H_ included
+#ifdef __cplusplus
+extern "C" {
+#endif // ifdef __cplusplus
+
+XCP_NO_DISCARD int xcp_str_to_int (const char *str, bool *ok);
+XCP_NO_DISCARD long xcp_str_to_long (const char *str, bool *ok);
+XCP_NO_DISCARD longlong xcp_str_to_longlong (const char *str, bool *ok);
+
+#ifdef __cplusplus
+}
+#endif // ifdef __cplusplus
+
+#endif // _XCP_NG_GENERIC_STRING_H_ included

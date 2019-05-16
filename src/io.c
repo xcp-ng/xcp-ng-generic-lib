@@ -19,7 +19,7 @@
 #include <poll.h>
 #include <unistd.h>
 
-#include "xcp-ng-generic/io.h"
+#include "xcp-ng/generic/io.h"
 
 // =============================================================================
 

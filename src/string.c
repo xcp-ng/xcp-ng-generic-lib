@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "xcp-ng-generic/string.h"
+#include "xcp-ng/generic/string.h"
 
 // =============================================================================
 
