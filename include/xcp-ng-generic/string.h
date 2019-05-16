@@ -14,13 +14,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _VTBX_NETWORK_H_
-#define _VTBX_NETWORK_H_
+#ifndef _XCP_NG_GENERIC_STRING_H_
+#define _XCP_NG_GENERIC_STRING_H_
 
-#include <sys/socket.h>
-#include <sys/un.h>
-
-#include "vtbx/global.h"
+#include "xcp-ng-generic/global.h"
 
 // =============================================================================
 
@@ -28,16 +25,12 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-#define VTBX_SOCK_UNIX_PATH_MAX \
-  VTBX_MEMBER_SIZE(struct sockaddr_un, sun_path) / \
-  VTBX_MEMBER_SIZE(struct sockaddr_un, sun_path[0])
-
-VtbxError vtbx_sock_connect (int sock, const struct sockaddr *addr, socklen_t addrlen);
-
-VtbxError vtbx_sock_send_shared_fd (int sock, const void *buf, size_t count, int sharedFd);
+XCP_NO_DISCARD int xcp_str_to_int (const char *str, bool *ok);
+XCP_NO_DISCARD long xcp_str_to_long (const char *str, bool *ok);
+XCP_NO_DISCARD longlong xcp_str_to_longlong (const char *str, bool *ok);
 
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
 
-#endif // _VTBX_NETWORK_H_ included
+#endif // _XCP_NG_GENERIC_STRING_H_ included

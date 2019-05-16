@@ -19,33 +19,33 @@
 #include <poll.h>
 #include <unistd.h>
 
-#include "vtbx/io.h"
+#include "xcp-ng-generic/io.h"
 
 // =============================================================================
 
-VtbxError vtbx_fd_close (int fd) {
+XcpError xcp_fd_close (int fd) {
   do {
     if (close(fd) == 0)
-      return VTBX_ERR_OK;
+      return XCP_ERR_OK;
   } while (errno == EINTR);
 
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_fd_dup (int fildes, int fildes2) {
+XcpError xcp_fd_dup (int fildes, int fildes2) {
   do {
     const int ret = dup2(fildes, fildes2);
     if (ret >= 0)
       return ret;
   } while (errno == EINTR);
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_fd_set_close_on_exec (int fd, bool status) {
+XcpError xcp_fd_set_close_on_exec (int fd, bool status) {
   int flags;
 
   if ((flags = fcntl(fd, F_GETFD)) < 0)
-    return VTBX_ERR_ERRNO;
+    return XCP_ERR_ERRNO;
 
   if (status)
     flags |= FD_CLOEXEC;
@@ -53,85 +53,85 @@ VtbxError vtbx_fd_set_close_on_exec (int fd, bool status) {
     flags &= ~FD_CLOEXEC;
 
   if (fcntl(fd, F_SETFD, flags) < 0)
-    return VTBX_ERR_ERRNO;
+    return XCP_ERR_ERRNO;
 
-  return VTBX_ERR_OK;
+  return XCP_ERR_OK;
 }
 
-VtbxError vtbx_fd_wait_for_rdata (int fd, int timeout) {
+XcpError xcp_fd_wait_for_rdata (int fd, int timeout) {
   struct pollfd fds = { fd, POLLIN, 0 };
   do {
     const int ret = poll(&fds, 1, timeout);
     if (ret > 0)
-      return VTBX_ERR_OK;
+      return XCP_ERR_OK;
     if (ret == 0)
-      return VTBX_ERR_TIMEOUT;
+      return XCP_ERR_TIMEOUT;
   } while (errno == EAGAIN || errno == EINTR);
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_fd_read (int fd, void *buf, size_t count) {
+XcpError xcp_fd_read (int fd, void *buf, size_t count) {
   do {
     const ssize_t ret = read(fd, buf, count);
     if (ret >= 0) return ret;
 
-  VTBX_C_WARN_PUSH
-  VTBX_C_WARN_DISABLE_LOGICAL_OP
+  XCP_C_WARN_PUSH
+  XCP_C_WARN_DISABLE_LOGICAL_OP
   } while (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR);
-  VTBX_C_WARN_POP
+  XCP_C_WARN_POP
 
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_fd_wait_read (int fd, void *buf, size_t count, int timeout) {
+XcpError xcp_fd_wait_read (int fd, void *buf, size_t count, int timeout) {
   if (timeout) {
-    const VtbxError ret = vtbx_fd_wait_for_rdata(fd, timeout);
-    if (ret != VTBX_ERR_OK) return ret;
+    const XcpError ret = xcp_fd_wait_for_rdata(fd, timeout);
+    if (ret != XCP_ERR_OK) return ret;
   }
-  return vtbx_fd_read(fd, buf, count);
+  return xcp_fd_read(fd, buf, count);
 }
 
-VtbxError vtbx_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset) {
+XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset) {
   *offset = 0;
   do {
-    const VtbxError ret = vtbx_fd_wait_read(fd, (char *)buf + *offset, count - *offset, timeout);
-    if (ret < 0) return VTBX_ERR_ERRNO;
+    const XcpError ret = xcp_fd_wait_read(fd, (char *)buf + *offset, count - *offset, timeout);
+    if (ret < 0) return XCP_ERR_ERRNO;
     if (ret == 0) break;
     *offset += (size_t)ret;
   } while (*offset < count);
-  return (VtbxError)*offset;
+  return (XcpError)*offset;
 }
 
-VtbxError vtbx_fd_write (int fd, const void *buf, size_t count) {
+XcpError xcp_fd_write (int fd, const void *buf, size_t count) {
   do {
     const ssize_t ret = write(fd, buf, count);
     if (ret >= 0) return ret;
 
-  VTBX_C_WARN_PUSH
-  VTBX_C_WARN_DISABLE_LOGICAL_OP
+  XCP_C_WARN_PUSH
+  XCP_C_WARN_DISABLE_LOGICAL_OP
   } while (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR);
-  VTBX_C_WARN_POP
+  XCP_C_WARN_POP
 
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_fd_write_all (int fd, const void *buf, size_t count, size_t *offset) {
+XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset) {
   *offset = 0;
   do {
-    const VtbxError ret = vtbx_fd_write(fd, (char *)buf + *offset, count - *offset);
-    if (ret < 0) return VTBX_ERR_ERRNO;
+    const XcpError ret = xcp_fd_write(fd, (char *)buf + *offset, count - *offset);
+    if (ret < 0) return XCP_ERR_ERRNO;
     *offset += (size_t)ret;
   } while (*offset < count);
-  return (VtbxError)*offset;
+  return (XcpError)*offset;
 }
 
-VtbxError vtbx_select (struct pollfd *fds, nfds_t nfds, int timeout) {
+XcpError xcp_select (struct pollfd *fds, nfds_t nfds, int timeout) {
   do {
     const int ret = poll(fds, nfds, timeout);
     if (ret > 0)
       return ret;
     if (ret == 0)
-      return VTBX_ERR_TIMEOUT;
+      return XCP_ERR_TIMEOUT;
   } while (errno == EAGAIN || errno == EINTR);
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }

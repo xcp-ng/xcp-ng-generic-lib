@@ -1,7 +1,7 @@
 # ==============================================================================
 # CMakeLists.txt
 #
-# Copyright (C) 2019  vtbx
+# Copyright (C) 2019  xcp-ng-generic
 # Copyright (C) 2019  Vates SAS
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,11 @@ cmake_minimum_required(VERSION 3.13.1)
 # Config & flags.
 # ------------------------------------------------------------------------------
 
-project(vtbx VERSION 1.0 LANGUAGES C)
+project(xcp-ng-generic VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 
-set(VTBX_LIB vtbx)
-set(VTBX_CONFIG_NAME Vtbx)
+set(XCP_LIB xcp-ng-generic)
+set(XCP_CONFIG_NAME XCP-ngGeneric)
 
 set(CUSTOM_C_FLAGS
   -Wall
@@ -57,9 +57,9 @@ set(SOURCES
   src/network.c
   src/string.c
 )
-add_library(${VTBX_LIB} SHARED ${SOURCES})
+add_library(${XCP_LIB} SHARED ${SOURCES})
 
-target_include_directories(${VTBX_LIB}
+target_include_directories(${XCP_LIB}
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -69,10 +69,10 @@ target_include_directories(${VTBX_LIB}
 
 add_compile_options(${CUSTOM_C_FLAGS})
 
-set_target_properties(${VTBX_LIB} PROPERTIES
+set_target_properties(${XCP_LIB} PROPERTIES
   LINKER_LANGUAGE C
   VERSION ${PROJECT_VERSION}
-  EXPORT_NAME ${VTBX_CONFIG_NAME}
+  EXPORT_NAME ${XCP_CONFIG_NAME}
 )
 
 # ------------------------------------------------------------------------------
@@ -81,15 +81,15 @@ set_target_properties(${VTBX_LIB} PROPERTIES
 
 include(GNUInstallDirs)
 
-set(VTBX_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${VTBX_CONFIG_NAME})
-set(VTBX_TARGETS ${VTBX_LIB}-targets)
+set(XCP_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${XCP_CONFIG_NAME})
+set(XCP_TARGETS ${XCP_LIB}-targets)
 
-set(VTBX_TARGETS_FILE ${VTBX_CONFIG_NAME}Targets.cmake)
-set(VTBX_CONFIG_FILE ${VTBX_CONFIG_NAME}Config.cmake)
-set(VTBX_CONFIG_VERSION_FILE ${VTBX_CONFIG_NAME}ConfigVersion.cmake)
+set(XCP_TARGETS_FILE ${XCP_CONFIG_NAME}Targets.cmake)
+set(XCP_CONFIG_FILE ${XCP_CONFIG_NAME}Config.cmake)
+set(XCP_CONFIG_VERSION_FILE ${XCP_CONFIG_NAME}ConfigVersion.cmake)
 
-install(TARGETS ${VTBX_LIB}
-  EXPORT ${VTBX_TARGETS}
+install(TARGETS ${XCP_LIB}
+  EXPORT ${XCP_TARGETS}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
@@ -97,30 +97,30 @@ install(TARGETS ${VTBX_LIB}
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(EXPORT ${VTBX_TARGETS}
-  FILE ${VTBX_TARGETS_FILE}
-  NAMESPACE ${VTBX_CONFIG_NAME}::
-  DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+install(EXPORT ${XCP_TARGETS}
+  FILE ${XCP_TARGETS_FILE}
+  NAMESPACE ${XCP_CONFIG_NAME}::
+  DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_VERSION_FILE}
+  ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_VERSION_FILE}
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config/${VTBX_CONFIG_FILE}.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_FILE}
-  INSTALL_DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config/${XCP_CONFIG_FILE}.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_FILE}
+  INSTALL_DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_FILE}
-  ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_CONFIG_VERSION_FILE}
-  DESTINATION ${VTBX_INSTALL_CONFIGDIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_FILE}
+  ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_VERSION_FILE}
+  DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
-export(EXPORT ${VTBX_TARGETS} FILE ${CMAKE_CURRENT_BINARY_DIR}/${VTBX_TARGETS_FILE} NAMESPACE ${VTBX_CONFIG_NAME}::)
+export(EXPORT ${XCP_TARGETS} FILE ${CMAKE_CURRENT_BINARY_DIR}/${XCP_TARGETS_FILE} NAMESPACE ${XCP_CONFIG_NAME}::)
 
-export(PACKAGE ${VTBX_CONFIG_NAME})
+export(PACKAGE ${XCP_CONFIG_NAME})

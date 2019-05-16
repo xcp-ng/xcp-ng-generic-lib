@@ -14,12 +14,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _VTBX_IO_H_
-#define _VTBX_IO_H_
+#ifndef _XCP_NG_GENERIC_IO_H_
+#define _XCP_NG_GENERIC_IO_H_
 
 #include <poll.h>
 
-#include "vtbx/global.h"
+#include "xcp-ng-generic/global.h"
 
 // =============================================================================
 
@@ -27,40 +27,40 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-// TODO: For vtbx_fd_wait_read and vtbx_select functions, timeout must be recomputed if an interruption is triggered.
+// TODO: For xcp_fd_wait_read and xcp_select functions, timeout must be recomputed if an interruption is triggered.
 
-VtbxError vtbx_fd_close (int fd);
+XcpError xcp_fd_close (int fd);
 
-VtbxError vtbx_fd_dup (int fildes, int fildes2);
+XcpError xcp_fd_dup (int fildes, int fildes2);
 
-VtbxError vtbx_fd_set_close_on_exec (int fd, bool status);
+XcpError xcp_fd_set_close_on_exec (int fd, bool status);
 
 // Wait `timeout` milliseconds for available readable data in fd.
-VtbxError vtbx_fd_wait_for_rdata (int fd, int timeout);
+XcpError xcp_fd_wait_for_rdata (int fd, int timeout);
 
 // Block until read. (/!\ Same behavior with O_NONBLOCK flag! => Blocking /!\)
-VtbxError vtbx_fd_read (int fd, void *buf, size_t count);
+XcpError xcp_fd_read (int fd, void *buf, size_t count);
 
 // Wait and read.
-VtbxError vtbx_fd_wait_read (int fd, void *buf, size_t count, int timeout);
+XcpError xcp_fd_wait_read (int fd, void *buf, size_t count, int timeout);
 
 // Wait and read `count` bytes.
 // If less bytes than expected are returned:
 // - EOF is reached for regular files.
 // - Pipe is empty and there is no more writer.
 // - Broken socket.
-VtbxError vtbx_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset);
+XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset);
 
 // Write. (/!\ Do not use (bypass) the O_NONBLOCK flag. /!\)
-VtbxError vtbx_fd_write (int fd, const void *buf, size_t count);
+XcpError xcp_fd_write (int fd, const void *buf, size_t count);
 
 // Wait and write `count` bytes. Can returns less bytes than expected.
-VtbxError vtbx_fd_write_all (int fd, const void *buf, size_t count, size_t *offset);
+XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset);
 
-VtbxError vtbx_select (struct pollfd *fds, nfds_t nfds, int timeout);
+XcpError xcp_select (struct pollfd *fds, nfds_t nfds, int timeout);
 
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
 
-#endif // _VTBX_IO_H_ included
+#endif // _XCP_NG_GENERIC_IO_H_ included

@@ -17,25 +17,25 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "vtbx/string.h"
+#include "xcp-ng-generic/string.h"
 
 // =============================================================================
 
-VTBX_NO_DISCARD int vtbx_str_to_int (const char *str, bool *ok) {
-  const longlong value = vtbx_str_to_longlong(str, ok);
+XCP_NO_DISCARD int xcp_str_to_int (const char *str, bool *ok) {
+  const longlong value = xcp_str_to_longlong(str, ok);
   if (ok && value != (int)value)
     *ok = false;
   return (int)value;
 }
 
-VTBX_NO_DISCARD long vtbx_str_to_long (const char *str, bool *ok) {
-  const longlong value = vtbx_str_to_longlong(str, ok);
+XCP_NO_DISCARD long xcp_str_to_long (const char *str, bool *ok) {
+  const longlong value = xcp_str_to_longlong(str, ok);
   if (ok && value != (long)value)
     *ok = false;
   return (long)value;
 }
 
-VTBX_NO_DISCARD longlong vtbx_str_to_longlong (const char *str, bool *ok) {
+XCP_NO_DISCARD longlong xcp_str_to_longlong (const char *str, bool *ok) {
   errno = 0;
 
   char *end;

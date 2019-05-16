@@ -14,23 +14,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _VTBX_STRING_H_
-#define _VTBX_STRING_H_
+#ifndef _XCP_NG_GENERIC_H_
+#define _XCP_NG_GENERIC_H_
 
-#include "vtbx/global.h"
+#include "xcp-ng-generic/algorithm.h"
+#include "xcp-ng-generic/io.h"
+#include "xcp-ng-generic/network.h"
+#include "xcp-ng-generic/string.h"
 
 // =============================================================================
 
-#ifdef __cplusplus
-extern "C" {
-#endif // ifdef __cplusplus
-
-VTBX_NO_DISCARD int vtbx_str_to_int (const char *str, bool *ok);
-VTBX_NO_DISCARD long vtbx_str_to_long (const char *str, bool *ok);
-VTBX_NO_DISCARD longlong vtbx_str_to_longlong (const char *str, bool *ok);
-
-#ifdef __cplusplus
-}
-#endif // ifdef __cplusplus
-
-#endif // _VTBX_STRING_H_ included
+#endif // _XCP_NG_GENERIC_H_ included

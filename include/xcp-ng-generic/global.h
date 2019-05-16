@@ -14,8 +14,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _VTBX_GLOBAL_H_
-#define _VTBX_GLOBAL_H_
+#ifndef _XCP_NG_GENERIC_GLOBAL_H_
+#define _XCP_NG_GENERIC_GLOBAL_H_
 
 #include <sys/types.h>
 
@@ -26,9 +26,9 @@
 // =============================================================================
 
 #if defined(__GNUC__)
-  #define VTBX_C_GNU
+  #define XCP_C_GNU
   #ifdef __clang__
-    #define VTBX_C_CLANG
+    #define XCP_C_CLANG
   #endif // ifdef __clang__
 #else
   #error "Unable to find a valid compiler."
@@ -36,33 +36,33 @@
 
 // -----------------------------------------------------------------------------
 
-#define VTBX_DECL_UNUSED __attribute__((__unused__))
+#define XCP_DECL_UNUSED __attribute__((__unused__))
 
 #if defined(__cplusplus) && __cplusplus >= 201703L
-  #define VTBX_NO_DISCARD [[ nodiscard ]]
+  #define XCP_NO_DISCARD [[ nodiscard ]]
 #else
-  #define VTBX_NO_DISCARD
+  #define XCP_NO_DISCARD
 #endif // if defined(__cplusplus) && __cplusplus >= 201703L
 
-#define VTBX_UNUSED(ARG) ((void)ARG)
+#define XCP_UNUSED(ARG) ((void)ARG)
 
 // -----------------------------------------------------------------------------
 
-#define VTBX_C_PRAGMA(WARNING) _Pragma(#WARNING)
+#define XCP_C_PRAGMA(WARNING) _Pragma(#WARNING)
 
-#if defined(VTBX_C_CLANG)
-  #define VTBX_C_WARN_PUSH VTBX_C_PRAGMA(clang diagnostic push)
-  #define VTBX_C_WARN_POP VTBX_C_PRAGMA(clang diagnostic pop)
-  #define VTBX_C_WARN_DISABLE_CLANG(TEXT) VTBX_C_PRAGMA(clang diagnostic ignored TEXT)
-  #define VTBX_C_WARN_DISABLE_GCC(TEXT)
-#elif defined(VTBX_C_GNU)
-  #define VTBX_C_WARN_PUSH VTBX_C_PRAGMA(GCC diagnostic push)
-  #define VTBX_C_WARN_POP VTBX_C_PRAGMA(GCC diagnostic pop)
-  #define VTBX_C_WARN_DISABLE_CLANG(TEXT)
-  #define VTBX_C_WARN_DISABLE_GCC(TEXT) VTBX_C_PRAGMA(GCC diagnostic ignored TEXT)
-#endif // if defined(VTBX_C_CLANG)
+#if defined(XCP_C_CLANG)
+  #define XCP_C_WARN_PUSH XCP_C_PRAGMA(clang diagnostic push)
+  #define XCP_C_WARN_POP XCP_C_PRAGMA(clang diagnostic pop)
+  #define XCP_C_WARN_DISABLE_CLANG(TEXT) XCP_C_PRAGMA(clang diagnostic ignored TEXT)
+  #define XCP_C_WARN_DISABLE_GCC(TEXT)
+#elif defined(XCP_C_GNU)
+  #define XCP_C_WARN_PUSH XCP_C_PRAGMA(GCC diagnostic push)
+  #define XCP_C_WARN_POP XCP_C_PRAGMA(GCC diagnostic pop)
+  #define XCP_C_WARN_DISABLE_CLANG(TEXT)
+  #define XCP_C_WARN_DISABLE_GCC(TEXT) XCP_C_PRAGMA(GCC diagnostic ignored TEXT)
+#endif // if defined(XCP_C_CLANG)
 
-#define VTBX_C_WARN_DISABLE_LOGICAL_OP VTBX_C_WARN_DISABLE_GCC("-Wlogical-op")
+#define XCP_C_WARN_DISABLE_LOGICAL_OP XCP_C_WARN_DISABLE_GCC("-Wlogical-op")
 
 // -----------------------------------------------------------------------------
 
@@ -76,11 +76,11 @@ typedef unsigned long long ulonglong;
 
 // -----------------------------------------------------------------------------
 
-typedef ssize_t VtbxError;
+typedef ssize_t XcpError;
 
-#define VTBX_ERR_OK 0
-#define VTBX_ERR_ERRNO -1
-#define VTBX_ERR_TIMEOUT -2
+#define XCP_ERR_OK 0
+#define XCP_ERR_ERRNO -1
+#define XCP_ERR_TIMEOUT -2
 
 // -----------------------------------------------------------------------------
 
@@ -91,8 +91,8 @@ typedef ssize_t VtbxError;
 
 // -----------------------------------------------------------------------------
 
-#define VTBX_ARRAY_LEN(ARR) (sizeof(ARR) / sizeof((ARR)[0]))
+#define XCP_ARRAY_LEN(ARR) (sizeof(ARR) / sizeof((ARR)[0]))
 
-#define VTBX_MEMBER_SIZE(TYPE, MEMBER) sizeof(((TYPE *)NULL)->MEMBER)
+#define XCP_MEMBER_SIZE(TYPE, MEMBER) sizeof(((TYPE *)NULL)->MEMBER)
 
-#endif // _VTBX_GLOBAL_H_ included
+#endif // _XCP_NG_GENERIC_GLOBAL_H_ included

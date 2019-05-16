@@ -17,21 +17,21 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "vtbx/io.h"
-#include "vtbx/network.h"
+#include "xcp-ng-generic/io.h"
+#include "xcp-ng-generic/network.h"
 
 // =============================================================================
 
-VtbxError vtbx_sock_connect (int sock, const struct sockaddr *addr, socklen_t addrlen) {
+XcpError xcp_sock_connect (int sock, const struct sockaddr *addr, socklen_t addrlen) {
   do {
     const int ret = connect(sock, addr, addrlen);
     if (ret >= 0)
       return ret;
   } while (errno == EINTR);
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }
 
-VtbxError vtbx_sock_send_shared_fd (int sock, const void *buf, size_t count, int sharedFd) {
+XcpError xcp_sock_send_shared_fd (int sock, const void *buf, size_t count, int sharedFd) {
   // See example: http://man7.org/linux/man-pages/man3/cmsg.3.html
   // Other example: https://blog.cloudflare.com/know-your-scm_rights/
   struct iovec vec;
@@ -63,17 +63,17 @@ VtbxError vtbx_sock_send_shared_fd (int sock, const void *buf, size_t count, int
     const ssize_t ret = sendmsg(sock, &msg, 0);
     if (ret >= 0) {
       if (ret >= (ssize_t)count)
-        return VTBX_ERR_OK;
+        return XCP_ERR_OK;
 
       // Send last bytes if necessary.
       size_t offset;
-      return vtbx_fd_write_all(sock, (char *)buf + ret, count - (size_t)ret, &offset);
+      return xcp_fd_write_all(sock, (char *)buf + ret, count - (size_t)ret, &offset);
     }
 
-  VTBX_C_WARN_PUSH
-  VTBX_C_WARN_DISABLE_LOGICAL_OP
+  XCP_C_WARN_PUSH
+  XCP_C_WARN_DISABLE_LOGICAL_OP
   } while (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR);
-  VTBX_C_WARN_POP
+  XCP_C_WARN_POP
 
-  return VTBX_ERR_ERRNO;
+  return XCP_ERR_ERRNO;
 }

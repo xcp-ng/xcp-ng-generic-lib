@@ -14,12 +14,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _VTBX_ALGORITHM_H_
-#define _VTBX_ALGORITHM_H_
+#ifndef _XCP_NG_GENERIC_ALGORITHM_H_
+#define _XCP_NG_GENERIC_ALGORITHM_H_
 
 #include <string.h>
 
-#include "vtbx/global.h"
+#include "xcp-ng-generic/global.h"
 
 // =============================================================================
 
@@ -29,20 +29,20 @@ extern "C" {
 
 // -----------------------------------------------------------------------------
 
-typedef bool (*VtbxPredicate)(const void *elem, const void *needle);
+typedef bool (*XcpPredicate)(const void *elem, const void *needle);
 
-VTBX_NO_DISCARD static inline bool vtbx_pred_str_equal (const void *elem, const void *needle) {
+XCP_NO_DISCARD static inline bool xcp_pred_str_equal (const void *elem, const void *needle) {
   return !strcmp(*(const char **)elem, (const char *)needle);
 }
 
 // -----------------------------------------------------------------------------
 
-VTBX_NO_DISCARD static inline size_t vtbx_arr_index_of (
+XCP_NO_DISCARD static inline size_t xcp_arr_index_of (
   const void *arr,
   size_t elemSize,
   size_t n,
   const void *needle,
-  VtbxPredicate predicate
+  XcpPredicate predicate
 ) {
   const char *p = (const char *)arr;
   const char *end = p + n * elemSize;
@@ -54,16 +54,16 @@ VTBX_NO_DISCARD static inline size_t vtbx_arr_index_of (
 
 // -----------------------------------------------------------------------------
 
-VTBX_NO_DISCARD VTBX_DECL_UNUSED static inline size_t vtbx_str_arr_index_of (
+XCP_NO_DISCARD XCP_DECL_UNUSED static inline size_t xcp_str_arr_index_of (
   const char **arr,
   size_t n,
   const char *needle
 ) {
-  return vtbx_arr_index_of(arr, sizeof(char *), n, needle, vtbx_pred_str_equal);
+  return xcp_arr_index_of(arr, sizeof(char *), n, needle, xcp_pred_str_equal);
 }
 
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
 
-#endif // _VTBX_ALGORITHM_H_ included
+#endif // _XCP_NG_GENERIC_ALGORITHM_H_ included
