@@ -54,7 +54,7 @@ XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *
 // Write. (/!\ Do not use (bypass) the O_NONBLOCK flag. /!\)
 XcpError xcp_fd_write (int fd, const void *buf, size_t count);
 
-// Wait and write `count` bytes. Can returns less bytes than expected.
+// Wait and write `count` bytes.
 XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset);
 
 XcpError xcp_select (struct pollfd *fds, nfds_t nfds, int timeout);
