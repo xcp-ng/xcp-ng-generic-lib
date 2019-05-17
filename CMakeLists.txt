@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.13.1)
 # Config & flags.
 # ------------------------------------------------------------------------------
 
-project(xcp-ng-generic VERSION 1.0 LANGUAGES C)
+project(xcp-ng-generic VERSION 1.0.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 
 set(XCP_LIB xcp-ng-generic)
@@ -73,6 +73,7 @@ add_compile_options(${CUSTOM_C_FLAGS})
 set_target_properties(${XCP_LIB} PROPERTIES
   LINKER_LANGUAGE C
   VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
   EXPORT_NAME ${XCP_MODULE}
 )
 
