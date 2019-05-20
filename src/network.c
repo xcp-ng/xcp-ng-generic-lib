@@ -56,7 +56,9 @@ XcpError xcp_sock_send_shared_fd (int sock, const void *buf, size_t count, int s
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = SCM_RIGHTS;
   cmsg->cmsg_len = CMSG_LEN(sizeof sharedFd);
-  *(int *)(CMSG_DATA(cmsg)) = sharedFd;
+
+  // Use memcpy because cmsg data pointer might not be sufficiently well aligned...
+  memcpy(CMSG_DATA(cmsg), &sharedFd, sizeof sharedFd);
 
   do {
     // Try to send buf and shared socket.
