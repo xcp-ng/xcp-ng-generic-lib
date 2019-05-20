@@ -53,6 +53,8 @@ endif ()
 # Sources & binary.
 # ------------------------------------------------------------------------------
 
+add_compile_options(${CUSTOM_C_FLAGS})
+
 set(SOURCES
   src/io.c
   src/network.c
@@ -67,8 +69,6 @@ target_include_directories(${XCP_LIB}
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-add_compile_options(${CUSTOM_C_FLAGS})
 
 set_target_properties(${XCP_LIB} PROPERTIES
   LINKER_LANGUAGE C
