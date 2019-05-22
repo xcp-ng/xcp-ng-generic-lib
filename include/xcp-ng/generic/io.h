@@ -27,7 +27,7 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-// TODO: For xcp_fd_wait_read and xcp_select functions, timeout must be recomputed if an interruption is triggered.
+// TODO: For xcp_fd_wait_read and xcp_poll functions, timeout must be recomputed if an interruption is triggered.
 
 XcpError xcp_fd_close (int fd);
 
