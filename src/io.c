@@ -92,14 +92,20 @@ XcpError xcp_fd_wait_read (int fd, void *buf, size_t count, int timeout) {
 }
 
 XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset) {
-  *offset = 0;
+  size_t pos = 0;
   do {
-    const XcpError ret = xcp_fd_wait_read(fd, (char *)buf + *offset, count - *offset, timeout);
-    if (ret < 0) return XCP_ERR_ERRNO;
+    const XcpError ret = xcp_fd_wait_read(fd, (char *)buf + pos, count - pos, timeout);
+    if (ret < 0) {
+      if (offset)
+        *offset = pos;
+      return XCP_ERR_ERRNO;
+    }
     if (ret == 0) break;
-    *offset += (size_t)ret;
-  } while (*offset < count);
-  return (XcpError)*offset;
+    pos += (size_t)ret;
+  } while (pos < count);
+  if (offset)
+    *offset = pos;
+  return (XcpError)pos;
 }
 
 XcpError xcp_fd_write (int fd, const void *buf, size_t count) {
@@ -116,13 +122,19 @@ XcpError xcp_fd_write (int fd, const void *buf, size_t count) {
 }
 
 XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset) {
-  *offset = 0;
+  size_t pos = 0;
   do {
-    const XcpError ret = xcp_fd_write(fd, (char *)buf + *offset, count - *offset);
-    if (ret < 0) return XCP_ERR_ERRNO;
-    *offset += (size_t)ret;
-  } while (*offset < count);
-  return (XcpError)*offset;
+    const XcpError ret = xcp_fd_write(fd, (char *)buf + pos, count - pos);
+    if (ret < 0) {
+      if (offset)
+        *offset = pos;
+      return XCP_ERR_ERRNO;
+    }
+    pos += (size_t)ret;
+  } while (pos < count);
+  if (offset)
+    *offset = pos;
+  return (XcpError)pos;
 }
 
 XcpError xcp_poll (struct pollfd *fds, nfds_t nfds, int timeout) {
