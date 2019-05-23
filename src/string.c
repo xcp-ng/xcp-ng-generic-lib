@@ -14,6 +14,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,6 +47,15 @@ longlong xcp_str_to_longlong (const char *str, bool *ok) {
     *ok = end != str && errno != ERANGE;
 
   return value;
+}
+
+// -----------------------------------------------------------------------------
+
+char *xcp_str_trim_end (char *str) {
+  char *end = str + strlen(str) - 1;
+  for (; end >= str && isspace(*end); --end);
+  *(end + 1) = '\0';
+  return str;
 }
 
 // -----------------------------------------------------------------------------

@@ -29,6 +29,8 @@ XCP_NO_DISCARD int xcp_str_to_int (const char *str, bool *ok);
 XCP_NO_DISCARD long xcp_str_to_long (const char *str, bool *ok);
 XCP_NO_DISCARD longlong xcp_str_to_longlong (const char *str, bool *ok);
 
+char *xcp_str_trim_end (char *str);
+
 XCP_NO_DISCARD char *xcp_buf_to_hex (const void *buf, size_t count);
 XCP_NO_DISCARD char *xcp_buf_to_reverse_hex (const void *buf, size_t count);
 
