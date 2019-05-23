@@ -21,21 +21,21 @@
 
 // =============================================================================
 
-XCP_NO_DISCARD int xcp_str_to_int (const char *str, bool *ok) {
+int xcp_str_to_int (const char *str, bool *ok) {
   const longlong value = xcp_str_to_longlong(str, ok);
   if (ok && value != (int)value)
     *ok = false;
   return (int)value;
 }
 
-XCP_NO_DISCARD long xcp_str_to_long (const char *str, bool *ok) {
+long xcp_str_to_long (const char *str, bool *ok) {
   const longlong value = xcp_str_to_longlong(str, ok);
   if (ok && value != (long)value)
     *ok = false;
   return (long)value;
 }
 
-XCP_NO_DISCARD longlong xcp_str_to_longlong (const char *str, bool *ok) {
+longlong xcp_str_to_longlong (const char *str, bool *ok) {
   errno = 0;
 
   char *end;
