@@ -56,6 +56,7 @@ endif ()
 add_compile_options(${CUSTOM_C_FLAGS})
 
 set(SOURCES
+  src/file.c
   src/io.c
   src/network.c
   src/string.c
