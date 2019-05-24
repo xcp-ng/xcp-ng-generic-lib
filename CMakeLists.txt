@@ -49,6 +49,14 @@ if (CMAKE_C_COMPILER_ID MATCHES "GNU")
   )
 endif ()
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+
+find_package(Bfd REQUIRED)
+
+set(LIBS
+  Bfd::Bfd
+)
+
 # ------------------------------------------------------------------------------
 # Sources & binary.
 # ------------------------------------------------------------------------------
@@ -59,6 +67,7 @@ set(SOURCES
   src/file.c
   src/io.c
   src/network.c
+  src/stacktrace.c
   src/string.c
 )
 add_library(${XCP_LIB} SHARED ${SOURCES})
@@ -70,6 +79,8 @@ target_include_directories(${XCP_LIB}
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+
+target_link_libraries(${XCP_LIB} PRIVATE ${LIBS})
 
 set_target_properties(${XCP_LIB} PROPERTIES
   LINKER_LANGUAGE C
