@@ -14,15 +14,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_H_
-#define _XCP_NG_GENERIC_H_
+#include <stdlib.h>
+#include <unistd.h>
 
-#include "generic/algorithm.h"
-#include "generic/file.h"
-#include "generic/io.h"
-#include "generic/network.h"
-#include "generic/string.h"
+#include "xcp-ng/generic/file.h"
 
 // =============================================================================
 
-#endif // _XCP_NG_GENERIC_H_ included
+char *xcp_readlink (const char *pathname) {
+  size_t bufSize = 16;
+  char *buf = malloc(bufSize);
+  if (!buf) return NULL;
+
+  ssize_t ret;
+  while ((size_t)(ret = readlink(pathname, buf, bufSize)) == bufSize) {
+    char *p = realloc(buf, bufSize << 1);
+    if (!p) {
+      free(buf);
+      return NULL;
+    }
+    buf = p;
+  }
+
+  if (ret == -1) {
+    free(buf);
+    return NULL;
+  }
+
+  return buf;
+}

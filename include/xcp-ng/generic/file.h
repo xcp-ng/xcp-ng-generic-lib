@@ -14,15 +14,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_H_
-#define _XCP_NG_GENERIC_H_
+#ifndef _XCP_NG_FILE_H_
+#define _XCP_NG_FILE_H_
 
-#include "generic/algorithm.h"
-#include "generic/file.h"
-#include "generic/io.h"
-#include "generic/network.h"
-#include "generic/string.h"
+#include "xcp-ng/generic/global.h"
 
 // =============================================================================
 
-#endif // _XCP_NG_GENERIC_H_ included
+#ifdef __cplusplus
+extern "C" {
+#endif // ifdef __cplusplus
+
+char *xcp_readlink (const char *pathname);
+
+#ifdef __cplusplus
+}
+#endif // ifdef __cplusplus
+
+#endif // _XCP_NG_FILE_H_ included
