@@ -17,6 +17,8 @@
 #ifndef _XCP_NG_FILE_H_
 #define _XCP_NG_FILE_H_
 
+#include <stdio.h>
+
 #include "xcp-ng/generic/global.h"
 
 // =============================================================================
@@ -24,6 +26,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif // ifdef __cplusplus
+
+XcpError xcp_file_close (FILE *fp);
 
 char *xcp_readlink (const char *pathname);
 

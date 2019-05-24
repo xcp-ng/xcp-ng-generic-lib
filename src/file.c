@@ -14,12 +14,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "xcp-ng/generic/file.h"
 
 // =============================================================================
+
+XcpError xcp_file_close (FILE *fp) {
+  do {
+    if (fclose(fp) == 0)
+      return XCP_ERR_OK;
+  } while (errno == EINTR);
+
+  return XCP_ERR_ERRNO;
+}
 
 char *xcp_readlink (const char *pathname) {
   size_t bufSize = 16;
