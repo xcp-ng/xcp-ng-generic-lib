@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "xcp-ng/generic/string.h"
 
@@ -45,4 +46,48 @@ longlong xcp_str_to_longlong (const char *str, bool *ok) {
     *ok = end != str && errno != ERANGE;
 
   return value;
+}
+
+// -----------------------------------------------------------------------------
+
+static inline char *xcp_create_hex_buf (const void *buf, size_t count, bool reverse) {
+  if (!count) return NULL;
+
+  static const char prefix[] = "0x";
+  static const size_t prefixSize = sizeof prefix - 1;
+
+  const size_t hexBufSize = prefixSize + count * 2 + 1;
+  char *hexBuf = malloc(hexBufSize);
+  if (!hexBuf) return NULL;
+
+  strncpy(hexBuf, prefix, prefixSize);
+  hexBuf[hexBufSize - 1] = '\0';
+
+  static const char hex[] = "0123456789ABCDEF";
+
+  if (reverse) {
+    char *pos = hexBuf + hexBufSize - 2;
+    for (size_t i = 0; i < count; ++i) {
+      const uchar byte = ((unsigned char *)buf)[i];
+      *pos-- = hex[byte & 0xF];
+      *pos-- = hex[byte >> 4];
+    }
+  } else {
+    char *pos = hexBuf + prefixSize;
+    for (size_t i = 0; i < count; ++i) {
+      const uchar byte = ((unsigned char *)buf)[i];
+      *pos++ = hex[byte >> 4];
+      *pos++ = hex[byte & 0xF];
+    }
+  }
+
+  return hexBuf;
+}
+
+char *xcp_buf_to_hex (const void *buf, size_t count) {
+  return xcp_create_hex_buf(buf, count, false);
+}
+
+char *xcp_buf_to_reverse_hex (const void *buf, size_t count) {
+  return xcp_create_hex_buf(buf, count, true);
 }
