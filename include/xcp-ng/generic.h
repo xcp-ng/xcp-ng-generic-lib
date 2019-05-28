@@ -21,6 +21,7 @@
 #include "generic/file.h"
 #include "generic/io.h"
 #include "generic/network.h"
+#include "generic/stacktrace.h"
 #include "generic/string.h"
 
 // =============================================================================
