@@ -70,7 +70,7 @@ static inline char *xcp_create_hex_buf (const void *buf, size_t count, bool reve
   char *hexBuf = malloc(hexBufSize);
   if (!hexBuf) return NULL;
 
-  strncpy(hexBuf, prefix, prefixSize);
+  memcpy(hexBuf, prefix, prefixSize);
   hexBuf[hexBufSize - 1] = '\0';
 
   static const char hex[] = "0123456789ABCDEF";
