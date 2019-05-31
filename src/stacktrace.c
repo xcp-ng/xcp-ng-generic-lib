@@ -262,12 +262,13 @@ fail:
   return NULL;
 }
 
-static void default_crash_handler () {
+static void default_crash_handler (int signal) {
   xcp_set_crash_handler(SIG_DFL);
 
   void *buffer[128];
   const int size = xcp_stacktrace(buffer, XCP_ARRAY_LEN(buffer));
   xcp_stacktrace_symbols_fd(buffer, (size_t)size, STDERR_FILENO);
+  _exit(128 + signal);
 }
 
 // -----------------------------------------------------------------------------
