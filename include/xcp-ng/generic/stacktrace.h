@@ -45,6 +45,33 @@ int xcp_clear_crash_handler ();
 // The file name and line number of each frame is displayed in the trace contrary to
 // the backtrace_symbols function.
 // See: man 3 backtrace
+//
+// Basic example:
+//
+// int main (int argc, char *argv[]) {
+//   xcp_set_crash_handler(SIG_DFL);
+//
+//   void *buffer[128];
+//   const int size = xcp_stacktrace(buffer, XCP_ARRAY_LEN(buffer));
+//
+//   char **strings = xcp_stacktrace_symbols(buffer, (size_t)size);
+//   if (!strings)
+//     return 0;
+//
+//   for (int i = 0; i < size; ++i)
+//     printf("%s\n", strings[i]);
+//
+//   free(strings);
+//
+//   return 0;
+// }
+//
+// Output:
+//
+// #0 [0x000000000350d7] /home/ronan/Projets/xcp-ng-generic-lib/build/../src/stacktrace.c:300  xcp_stacktrace() in a.out
+// #1 [0x000000000351d3] /home/ronan/Projets/xcp-ng-generic-lib/build/../src/stacktrace.c:323  main() in a.out
+// #2 [0x00000000024223] ??:0  __libc_start_main() in /usr/lib/libc.so.6
+// #3 [0x0000000003446e] ??:0  _start() in a.out
 int xcp_stacktrace (void **buffer, size_t size);
 
 char **xcp_stacktrace_symbols (void *const *buffer, size_t size);

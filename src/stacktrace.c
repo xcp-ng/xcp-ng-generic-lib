@@ -15,8 +15,11 @@
  */
 
 #define _GNU_SOURCE
+#include <assert.h>
 #include <execinfo.h>
+#include <inttypes.h>
 #include <link.h>
+#include <math.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +30,11 @@
 #include <bfd.h>
 
 #include "xcp-ng/generic/io.h"
+#include "xcp-ng/generic/math.h"
 #include "xcp-ng/generic/stacktrace.h"
+#include "xcp-ng/generic/file.h"
+
+#define HEX_ADDRESS_LEN ((int)(sizeof(uintptr_t) * 2))
 
 // =============================================================================
 
@@ -46,6 +53,7 @@ typedef struct SymbolInfo {
   const char *function;
   uint line;
   const void *physAddress;
+  const char *libraryName;
 } SymbolInfo;
 
 static int symbol_info_to_str (const SymbolInfo *info, char *buf, size_t size) {
@@ -57,7 +65,10 @@ static int symbol_info_to_str (const SymbolInfo *info, char *buf, size_t size) {
   if (!filename || *filename == '\0')
     filename = "??";
 
-  return snprintf(buf, size, "[%p] %s:%u  %s()", info->physAddress, filename, info->line, function) + 1;
+  return snprintf(
+    buf, size, "[%#0*" PRIxPTR "] %s:%u  %s() in %s",
+    HEX_ADDRESS_LEN, (uintptr_t)info->physAddress, filename, info->line, function, info->libraryName
+  );
 }
 
 // -----------------------------------------------------------------------------
@@ -110,8 +121,9 @@ static char *physical_address_to_str_from_syms (bfd *bin, asymbol **symbols, con
     info.physAddress = physAddress;
   }
 
-  const int size = symbol_info_to_str(&info, NULL, 0);
-  if (size < 0)
+  info.libraryName = bin->filename;
+  const int size = symbol_info_to_str(&info, NULL, 0) + 1;
+  if (size <= 0)
     return NULL;
 
   char *str = malloc((size_t)size);
@@ -174,13 +186,19 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
   bfd_init();
 
   // 2. Find for each symbol: source file and line.
+  char *self = xcp_readlink("/proc/self/exe");
+  if (!self)
+    return NULL;
+  const char *selfBasename = basename(self);
+
+  int i = (int)size;
+
   size_t charCount = 0;
   char **locations = malloc(size * sizeof(char **));
   if (!locations)
-    return NULL;
+    goto fail;
 
-  int i;
-  for (i = (int)size - 1; i >= 0; --i) {
+  for (--i; i >= 0; --i) {
     Symbol symbol = { .address = buffer[i] };
 
     if (!dl_iterate_phdr(find_symbol_location, &symbol)) {
@@ -200,7 +218,7 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
       locations[i] = physical_addr_to_str_from_file(symbol.filepath, physAddr);
     else
       // Binary.
-      locations[i] = physical_addr_to_str_from_file("/proc/self/exe", physAddr);
+      locations[i] = physical_addr_to_str_from_file(selfBasename, physAddr);
 
     if (!locations[i])
       goto fail;
@@ -212,27 +230,35 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
   // strings contains:
   // One big string at end containing all symbol strings.
   // `size` pointers on the big string.
+  const int sizeLength = (int)log10((double)XCP_MIN(1u, size - 1)) + 2;
+  // `sizeLength + 1` because there is a `#` in the front of frame. ;)
+  charCount += (size_t)(sizeLength + 1) * size;
+
   char **strings = malloc(charCount + size * sizeof(char *));
   if (!strings)
     goto fail;
 
   char *data = (char *)(strings + size);
 
-  for (int i = (int)size - 1; i >= 0; --i) {
-    strcpy(data, locations[i]);
-    free(locations[i]);
-    strings[i] = data;
-    data += strlen(data) + 1;
+  for (int j = (int)size - 1; j >= 0; --j) {
+    const size_t offset = (size_t)sprintf(data, "#%-*u", sizeLength, j);
+    strcpy(data + offset, locations[j]);
+    strings[j] = data;
+    data += offset + strlen(locations[j]) + 1;
+    free(locations[j]);
   }
+  assert(charCount == (size_t)(data - (char *)(strings + size)));
 
   free(locations);
+  free(self);
 
   return strings;
 
 fail:
-  for (++i; i < (int)size; ++i)
+  for (; i < (int)size; ++i)
     free(locations[i]);
   free(locations);
+  free(self);
 
   return NULL;
 }

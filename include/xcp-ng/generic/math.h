@@ -14,44 +14,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
+#ifndef _XCP_NG_MATH_H_
+#define _XCP_NG_MATH_H_
 
-#include "xcp-ng/generic/file.h"
+#include "xcp-ng/generic/global.h"
 
 // =============================================================================
 
-XcpError xcp_file_close (FILE *fp) {
-  do {
-    if (fclose(fp) == 0)
-      return XCP_ERR_OK;
-  } while (errno == EINTR);
+#ifdef __cplusplus
+extern "C" {
+#endif // ifdef __cplusplus
 
-  return XCP_ERR_ERRNO;
+#define XCP_MIN(A, B) ({ \
+  __typeof__(A) _a = (A); \
+  __typeof__(B) _b = (B); \
+  _a < _b ? _a : _b; \
+})
+
+#define XCP_MAX(A, B) ({ \
+  __typeof__(A) _a = (A); \
+  __typeof__(B) _b = (B); \
+  _a > _b ? _a : _b; \
+})
+
+#ifdef __cplusplus
 }
+#endif // ifdef __cplusplus
 
-char *xcp_readlink (const char *pathname) {
-  size_t bufSize = 16;
-  char *buf = malloc(bufSize);
-  if (!buf) return NULL;
-
-  ssize_t ret;
-  while ((size_t)(ret = readlink(pathname, buf, bufSize - 1)) == bufSize - 1) {
-    bufSize <<= 1;
-    char *p = realloc(buf, bufSize);
-    if (!p) {
-      free(buf);
-      return NULL;
-    }
-    buf = p;
-  }
-
-  if (ret == -1) {
-    free(buf);
-    return NULL;
-  }
-
-  buf[ret] = '\0';
-  return buf;
-}
+#endif // _XCP_NG_MATH_H_ included
