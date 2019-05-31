@@ -49,8 +49,6 @@ int xcp_clear_crash_handler ();
 // Basic example:
 //
 // int main (int argc, char *argv[]) {
-//   xcp_set_crash_handler(SIG_DFL);
-//
 //   void *buffer[128];
 //   const int size = xcp_stacktrace(buffer, XCP_ARRAY_LEN(buffer));
 //
