@@ -229,7 +229,7 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
   // strings contains:
   // One big string at end containing all symbol strings.
   // `size` pointers on the big string.
-  const int sizeLength = (int)log10((double)XCP_MIN(1u, size - 1)) + 2;
+  const int sizeLength = (int)log10((double)XCP_MAX(1u, size - 1)) + 2;
   // `sizeLength + 1` because there is a `#` in the front of frame. ;)
   charCount += (size_t)(sizeLength + 1) * size;
 
