@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.13.1)
 # Config & flags.
 # ------------------------------------------------------------------------------
 
-project(xcp-ng-generic VERSION 1.1.0 LANGUAGES C)
+project(xcp-ng-generic VERSION 1.1.1 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 
 set(XCP_LIB xcp-ng-generic)
