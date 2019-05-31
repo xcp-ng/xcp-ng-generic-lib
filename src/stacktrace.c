@@ -189,7 +189,6 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
   char *self = xcp_readlink("/proc/self/exe");
   if (!self)
     return NULL;
-  const char *selfBasename = basename(self);
 
   int i = (int)size;
 
@@ -218,7 +217,7 @@ static char **stacktrace_symbols (void *const *buffer, size_t size) {
       locations[i] = physical_addr_to_str_from_file(symbol.filepath, physAddr);
     else
       // Binary.
-      locations[i] = physical_addr_to_str_from_file(selfBasename, physAddr);
+      locations[i] = physical_addr_to_str_from_file(self, physAddr);
 
     if (!locations[i])
       goto fail;
