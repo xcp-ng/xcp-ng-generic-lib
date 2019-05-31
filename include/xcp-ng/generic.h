@@ -20,6 +20,7 @@
 #include "generic/algorithm.h"
 #include "generic/file.h"
 #include "generic/io.h"
+#include "generic/math.h"
 #include "generic/network.h"
 #include "generic/stacktrace.h"
 #include "generic/string.h"
