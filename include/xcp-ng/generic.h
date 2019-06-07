@@ -18,6 +18,7 @@
 #define _XCP_NG_GENERIC_H_
 
 #include "generic/algorithm.h"
+#include "generic/endian.h"
 #include "generic/file.h"
 #include "generic/io.h"
 #include "generic/math.h"
