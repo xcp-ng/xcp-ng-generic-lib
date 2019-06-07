@@ -35,6 +35,8 @@ XcpError xcp_fd_dup (int fildes, int fildes2);
 
 XcpError xcp_fd_set_close_on_exec (int fd, bool status);
 
+// -----------------------------------------------------------------------------
+
 // Wait `timeout` milliseconds for available readable data in fd.
 XcpError xcp_fd_wait_for_rdata (int fd, int timeout);
 
@@ -51,11 +53,19 @@ XcpError xcp_fd_wait_read (int fd, void *buf, size_t count, int timeout);
 // - Broken socket.
 XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *offset);
 
+// -----------------------------------------------------------------------------
+
 // Write. (/!\ Do not use (bypass) the O_NONBLOCK flag. /!\)
 XcpError xcp_fd_write (int fd, const void *buf, size_t count);
 
 // Wait and write `count` bytes.
 XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset);
+
+// -----------------------------------------------------------------------------
+
+XcpError xcp_fd_pread (int fd, void *buf, size_t count, off_t offset);
+
+// -----------------------------------------------------------------------------
 
 XcpError xcp_poll (struct pollfd *fds, nfds_t nfds, int timeout);
 
