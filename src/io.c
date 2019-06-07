@@ -58,6 +58,8 @@ XcpError xcp_fd_set_close_on_exec (int fd, bool status) {
   return XCP_ERR_OK;
 }
 
+// -----------------------------------------------------------------------------
+
 XcpError xcp_fd_wait_for_rdata (int fd, int timeout) {
   struct pollfd fds = { fd, POLLIN, 0 };
   do {
@@ -108,6 +110,8 @@ XcpError xcp_fd_read_all (int fd, void *buf, size_t count, int timeout, size_t *
   return (XcpError)pos;
 }
 
+// -----------------------------------------------------------------------------
+
 XcpError xcp_fd_write (int fd, const void *buf, size_t count) {
   do {
     const ssize_t ret = write(fd, buf, count);
@@ -136,6 +140,23 @@ XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset
     *offset = pos;
   return (XcpError)pos;
 }
+
+// -----------------------------------------------------------------------------
+
+XcpError xcp_fd_pread (int fd, void *buf, size_t count, off_t offset) {
+  do {
+    const ssize_t ret = pread(fd, buf, count, offset);
+    if (ret >= 0) return ret;
+
+  XCP_C_WARN_PUSH
+  XCP_C_WARN_DISABLE_LOGICAL_OP
+  } while (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR);
+  XCP_C_WARN_POP
+
+  return XCP_ERR_ERRNO;
+}
+
+// -----------------------------------------------------------------------------
 
 XcpError xcp_poll (struct pollfd *fds, nfds_t nfds, int timeout) {
   do {
