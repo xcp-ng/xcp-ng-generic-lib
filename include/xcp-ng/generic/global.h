@@ -63,6 +63,7 @@
 #endif // if defined(XCP_C_CLANG)
 
 #define XCP_C_WARN_DISABLE_LOGICAL_OP XCP_C_WARN_DISABLE_GCC("-Wlogical-op")
+#define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER XCP_C_WARN_DISABLE_CLANG("-Waddress-of-packed-member")
 
 // -----------------------------------------------------------------------------
 
