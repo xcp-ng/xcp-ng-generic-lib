@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "xcp-ng/generic/file.h"
@@ -54,4 +55,13 @@ char *xcp_readlink (const char *pathname) {
 
   buf[ret] = '\0';
   return buf;
+}
+
+XcpError xcp_file_size (const char *filename) {
+  struct stat st;
+  if (stat(filename, &st) < 0)
+    return XCP_ERR_ERRNO;
+  if (!S_ISCHR(st.st_mode) && !S_ISBLK(st.st_mode))
+    return st.st_size;
+  return 0; // TODO: Handle device block.
 }

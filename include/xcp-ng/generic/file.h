@@ -31,6 +31,8 @@ XcpError xcp_file_close (FILE *fp);
 
 char *xcp_readlink (const char *pathname);
 
+XCP_NO_DISCARD XcpError xcp_file_size (const char *filename);
+
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
