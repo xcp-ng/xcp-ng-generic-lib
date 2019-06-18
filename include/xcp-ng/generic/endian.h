@@ -39,26 +39,26 @@ extern "C" {
 
 // -----------------------------------------------------------------------------
 
-static inline uint16_t xcp_swap_endian_u16 (uint16_t src) {
+XCP_NO_DISCARD static inline uint16_t xcp_swap_endian_u16 (uint16_t src) {
   return (uint16_t)(((src & 0x00FF) << 8) | ((src & 0xFF00) >> 8));
 }
 
-XCP_DECL_UNUSED static inline int16_t xcp_swap_endian_16 (int16_t src) {
+XCP_NO_DISCARD XCP_DECL_UNUSED static inline int16_t xcp_swap_endian_16 (int16_t src) {
   return (int16_t)xcp_swap_endian_u16((uint16_t)src);
 }
 
-static inline uint32_t xcp_swap_endian_u32 (uint32_t src) {
+XCP_NO_DISCARD static inline uint32_t xcp_swap_endian_u32 (uint32_t src) {
   return ((src & 0x000000FF) << 24) |
     ((src & 0x0000FF00) << 8) |
     ((src & 0x00FF0000) >> 8) |
     ((src & 0xFF000000) >> 24);
 }
 
-XCP_DECL_UNUSED static inline int32_t xcp_swap_endian_32 (int32_t src) {
+XCP_NO_DISCARD XCP_DECL_UNUSED static inline int32_t xcp_swap_endian_32 (int32_t src) {
   return (int32_t)xcp_swap_endian_u32((uint32_t)src);
 }
 
-static inline uint64_t xcp_swap_endian_u64 (uint64_t src) {
+XCP_NO_DISCARD static inline uint64_t xcp_swap_endian_u64 (uint64_t src) {
   return ((src & 0x00000000000000FF) << 56) |
     ((src & 0x000000000000FF00) << 40) |
     ((src & 0x0000000000FF0000) << 24) |
@@ -69,13 +69,13 @@ static inline uint64_t xcp_swap_endian_u64 (uint64_t src) {
     ((src & 0xFF00000000000000) >> 56);
 }
 
-XCP_DECL_UNUSED static inline int64_t xcp_swap_endian_64 (int64_t src) {
+XCP_NO_DISCARD XCP_DECL_UNUSED static inline int64_t xcp_swap_endian_64 (int64_t src) {
   return (int64_t)xcp_swap_endian_u64((uint64_t)src);
 }
 
 // -----------------------------------------------------------------------------
 
-static inline uint16_t xcp_from_le_u16 (uint16_t src) {
+XCP_NO_DISCARD static inline uint16_t xcp_from_le_u16 (uint16_t src) {
   #if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
     return xcp_swap_endian_u16(src);
   #else
@@ -83,11 +83,11 @@ static inline uint16_t xcp_from_le_u16 (uint16_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int16_t xcp_from_le_16 (int16_t src) {
+XCP_NO_DISCARD static inline int16_t xcp_from_le_16 (int16_t src) {
   return (int16_t)xcp_from_le_u16((uint16_t)src);
 }
 
-static inline uint32_t xcp_from_le_u32 (uint32_t src) {
+XCP_NO_DISCARD static inline uint32_t xcp_from_le_u32 (uint32_t src) {
   #if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
     return xcp_swap_endian_u32(src);
   #else
@@ -95,11 +95,11 @@ static inline uint32_t xcp_from_le_u32 (uint32_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int32_t xcp_from_le_32 (int32_t src) {
+XCP_NO_DISCARD static inline int32_t xcp_from_le_32 (int32_t src) {
   return (int32_t)xcp_from_le_u32((uint32_t)src);
 }
 
-static inline uint64_t xcp_from_le_u64 (uint64_t src) {
+XCP_NO_DISCARD static inline uint64_t xcp_from_le_u64 (uint64_t src) {
   #if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
     return xcp_swap_endian_u64(src);
   #else
@@ -107,13 +107,13 @@ static inline uint64_t xcp_from_le_u64 (uint64_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int64_t xcp_from_le_64 (int64_t src) {
+XCP_NO_DISCARD static inline int64_t xcp_from_le_64 (int64_t src) {
   return (int64_t)xcp_from_le_u64((uint64_t)src);
 }
 
 // -----------------------------------------------------------------------------
 
-static inline uint16_t xcp_from_be_u16 (uint16_t src) {
+XCP_NO_DISCARD static inline uint16_t xcp_from_be_u16 (uint16_t src) {
   #if XCP_BYTE_ORDER == XCP_LITTLE_ENDIAN
     return xcp_swap_endian_u16(src);
   #else
@@ -121,11 +121,11 @@ static inline uint16_t xcp_from_be_u16 (uint16_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int16_t xcp_from_be_16 (int16_t src) {
+XCP_NO_DISCARD static inline int16_t xcp_from_be_16 (int16_t src) {
   return (int16_t)xcp_from_be_u16((uint16_t)src);
 }
 
-static inline uint32_t xcp_from_be_u32 (uint32_t src) {
+XCP_NO_DISCARD static inline uint32_t xcp_from_be_u32 (uint32_t src) {
   #if XCP_BYTE_ORDER == XCP_LITTLE_ENDIAN
     return xcp_swap_endian_u32(src);
   #else
@@ -133,11 +133,11 @@ static inline uint32_t xcp_from_be_u32 (uint32_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int32_t xcp_from_be_32 (int32_t src) {
+XCP_NO_DISCARD static inline int32_t xcp_from_be_32 (int32_t src) {
   return (int32_t)xcp_from_be_u32((uint32_t)src);
 }
 
-static inline uint64_t xcp_from_be_u64 (uint64_t src) {
+XCP_NO_DISCARD static inline uint64_t xcp_from_be_u64 (uint64_t src) {
   #if XCP_BYTE_ORDER == XCP_LITTLE_ENDIAN
     return xcp_swap_endian_u64(src);
   #else
@@ -145,7 +145,7 @@ static inline uint64_t xcp_from_be_u64 (uint64_t src) {
   #endif // if XCP_BYTE_ORDER == XCP_BIG_ENDIAN
 }
 
-static inline int64_t xcp_from_be_64 (int64_t src) {
+XCP_NO_DISCARD static inline int64_t xcp_from_be_64 (int64_t src) {
   return (int64_t)xcp_from_be_u64((uint64_t)src);
 }
 
