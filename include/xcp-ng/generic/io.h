@@ -18,6 +18,7 @@
 #define _XCP_NG_GENERIC_IO_H_
 
 #include <poll.h>
+#include <sys/uio.h>
 
 #include "xcp-ng/generic/global.h"
 
@@ -64,6 +65,8 @@ XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset
 // -----------------------------------------------------------------------------
 
 XcpError xcp_fd_pread (int fd, void *buf, size_t count, off_t offset);
+
+XcpError xcp_fd_preadv (int fd, const struct iovec *iovs, size_t iovCount, off_t offset);
 
 // -----------------------------------------------------------------------------
 

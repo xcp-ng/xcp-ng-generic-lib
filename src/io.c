@@ -16,7 +16,6 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <poll.h>
 #include <unistd.h>
 
 #include "xcp-ng/generic/io.h"
@@ -146,6 +145,19 @@ XcpError xcp_fd_write_all (int fd, const void *buf, size_t count, size_t *offset
 XcpError xcp_fd_pread (int fd, void *buf, size_t count, off_t offset) {
   do {
     const ssize_t ret = pread(fd, buf, count, offset);
+    if (ret >= 0) return ret;
+
+  XCP_C_WARN_PUSH
+  XCP_C_WARN_DISABLE_LOGICAL_OP
+  } while (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR);
+  XCP_C_WARN_POP
+
+  return XCP_ERR_ERRNO;
+}
+
+XcpError xcp_fd_preadv (int fd, const struct iovec *iovs, size_t iovCount, off_t offset) {
+  do {
+    const ssize_t ret = preadv(fd, iovs, (int)iovCount, offset);
     if (ret >= 0) return ret;
 
   XCP_C_WARN_PUSH
