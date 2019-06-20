@@ -17,9 +17,6 @@
 #ifndef _XCP_NG_GENERIC_IO_H_
 #define _XCP_NG_GENERIC_IO_H_
 
-#include <poll.h>
-#include <sys/uio.h>
-
 #include "xcp-ng/generic/global.h"
 
 // =============================================================================
@@ -27,6 +24,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif // ifdef __cplusplus
+
+struct iovec;
+struct pollfd;
 
 // TODO: For xcp_fd_wait_read and xcp_poll functions, timeout must be recomputed if an interruption is triggered.
 
@@ -70,7 +70,7 @@ XcpError xcp_fd_preadv (int fd, const struct iovec *iovs, size_t iovCount, off_t
 
 // -----------------------------------------------------------------------------
 
-XcpError xcp_poll (struct pollfd *fds, nfds_t nfds, int timeout);
+XcpError xcp_poll (struct pollfd *fds, uint nfds, int timeout);
 
 #ifdef __cplusplus
 }

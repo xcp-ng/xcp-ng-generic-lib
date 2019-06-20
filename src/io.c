@@ -16,6 +16,8 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <poll.h>
+#include <sys/uio.h>
 #include <unistd.h>
 
 #include "xcp-ng/generic/io.h"
@@ -170,7 +172,7 @@ XcpError xcp_fd_preadv (int fd, const struct iovec *iovs, size_t iovCount, off_t
 
 // -----------------------------------------------------------------------------
 
-XcpError xcp_poll (struct pollfd *fds, nfds_t nfds, int timeout) {
+XcpError xcp_poll (struct pollfd *fds, uint nfds, int timeout) {
   do {
     const int ret = poll(fds, nfds, timeout);
     if (ret > 0)
