@@ -201,6 +201,50 @@ XCP_DECL_UNUSED static inline int64_t xcp_from_be_64_p (int64_t *src) {
   return (*src = xcp_from_be_64(*src));
 }
 
+// -----------------------------------------------------------------------------
+
+#define xcp_to_le_u16(src) xcp_from_le_u16(src)
+#define xcp_to_le_16(src) xcp_from_le_16(src)
+
+#define xcp_to_le_u32(src) xcp_from_le_u32(src)
+#define xcp_to_le_32(src) xcp_from_le_32(src)
+
+#define xcp_to_le_u64(src) xcp_from_le_u64(src)
+#define xcp_to_le_64(src) xcp_from_le_64(src)
+
+// -----------------------------------------------------------------------------
+
+#define xcp_to_be_u16(src) xcp_from_be_u16(src)
+#define xcp_to_be_16(src) xcp_from_be_16(src)
+
+#define xcp_to_be_u32(src) xcp_from_be_u32(src)
+#define xcp_to_be_32(src) xcp_from_be_32(src)
+
+#define xcp_to_be_u64(src) xcp_from_be_u64(src)
+#define xcp_to_be_64(src) xcp_from_be_64(src)
+
+// -----------------------------------------------------------------------------
+
+#define xcp_to_le_u16_p(src) xcp_from_le_u16_p(src)
+#define xcp_to_le_16_p(src) xcp_from_le_16_p(src)
+
+#define xcp_to_le_u32_p(src) xcp_from_le_u32_p(src)
+#define xcp_to_le_32_p(src) xcp_from_le_32_p(src)
+
+#define xcp_to_le_u64_p(src) xcp_from_le_u64_p(src)
+#define xcp_to_le_64_p(src) xcp_from_le_64_p(src)
+
+// -----------------------------------------------------------------------------
+
+#define xcp_to_be_u16_p(src) xcp_from_be_u16_p(src)
+#define xcp_to_be_16_p(src) xcp_from_be_16_p(src)
+
+#define xcp_to_be_u32_p(src) xcp_from_be_u32_p(src)
+#define xcp_to_be_32_p(src) xcp_from_be_32_p(src)
+
+#define xcp_to_be_u64_p(src) xcp_from_be_u64_p(src)
+#define xcp_to_be_64_p(src) xcp_from_be_64_p(src)
+
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
