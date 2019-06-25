@@ -14,8 +14,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_MATH_H_
-#define _XCP_NG_MATH_H_
+#ifndef _XCP_NG_COROUTINE_H_
+#define _XCP_NG_COROUTINE_H_
 
 #include "xcp-ng/generic/global.h"
 
@@ -25,24 +25,30 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-#define XCP_MIN(A, B) ({ \
-  __typeof__(A) _a = (A); \
-  __typeof__(B) _b = (B); \
-  _a < _b ? _a : _b; \
-})
+#define XCP_COROUTINE_STACK_SIZE (1024UL * 1024UL)
 
-#define XCP_MAX(A, B) ({ \
-  __typeof__(A) _a = (A); \
-  __typeof__(B) _b = (B); \
-  _a > _b ? _a : _b; \
-})
+typedef struct XcpCoroutine XcpCoroutine;
 
-#define __XCP_ROUND_MASK_2(X, Y) ((__typeof__(X))((Y) - 1))
-#define XCP_ROUND_UP_2(X, Y) ((((X) - 1) | __XCP_ROUND_MASK_2(X, Y)) + 1)
-#define XCP_ROUND_DOWN_2(X, Y) ((X) & ~__XCP_ROUND_MASK_2(X, Y))
+typedef void (*XcpCoroutineCb)(void *userData);
+
+// Make a new coroutine.
+XCP_NO_DISCARD XcpCoroutine *xcp_coroutine_create (XcpCoroutineCb cb, void *userData);
+
+// Return the current coroutine of the execution thread.
+XCP_NO_DISCARD XcpCoroutine *xcp_coroutine_get_self ();
+
+// Resume a coroutine.
+void xcp_coroutine_resume (XcpCoroutine *coroutine);
+
+// Return to the caller and execute pending coroutines.
+void xcp_coroutine_yield ();
+
+// Execute a coroutine directly if we are not curently in a coroutine. In the other cases
+// the coroutine is added to the coroutine pending list.
+void xcp_coroutine_process (XcpCoroutine *coroutine);
 
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus
 
-#endif // _XCP_NG_MATH_H_ included
+#endif // _XCP_NG_COROUTINE_H_ included

@@ -1,5 +1,5 @@
 # ==============================================================================
-# FindBfd.cmake
+# FindValgrind.cmake
 #
 # Copyright (C) 2019  xcp-ng-generic-lib
 # Copyright (C) 2019  Vates SAS
@@ -18,42 +18,35 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ==============================================================================
 
-# Find the bfd library.
+# Find the valgrind header.
 #
 # This will define the following variables:
-#   Bfd_FOUND
-#   Bfd_INCLUDE_DIRS
-#   Bfd_LIBRARIES
+#   Valgrind_FOUND
+#   Valgrind_INCLUDE_DIRS
+#   Valgrind_LIBRARIES
 #
 # and the following imported targets:
-#   Bfd::Bfd
+#   Valgrind::Valgrind
 
-find_path(Bfd_INCLUDE_DIR
-  NAMES bfd.h
+find_path(Valgrind_INCLUDE_DIR
+  NAMES valgrind/valgrind.h
   PATHS /usr/include
 )
 
-find_library(Bfd_LIBRARY
-  NAMES bfd
-  PATHS /usr/lib /usr/lib64
-)
-
-mark_as_advanced(Bfd_FOUND Bfd_INCLUDE_DIR Bfd_LIBRARY)
+mark_as_advanced(Valgrind_FOUND Valgrind_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Bfd
-  REQUIRED_VARS Bfd_INCLUDE_DIR Bfd_LIBRARY
+find_package_handle_standard_args(Valgrind
+  REQUIRED_VARS Valgrind_INCLUDE_DIR
 )
 
-if (Bfd_FOUND)
-  get_filename_component(Bfd_INCLUDE_DIRS ${Bfd_INCLUDE_DIR} DIRECTORY)
+if (Valgrind_FOUND)
+  get_filename_component(Valgrind_INCLUDE_DIRS ${Valgrind_INCLUDE_DIR} DIRECTORY)
 endif ()
-set(Bfd_LIBRARIES ${Bfd_LIBRARY})
 
-if (Bfd_FOUND AND NOT TARGET Bfd::Bfd)
-  add_library(Bfd::Bfd INTERFACE IMPORTED)
-  set_target_properties(Bfd::Bfd PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${Bfd_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${Bfd_LIBRARIES}"
+if (Valgrind_FOUND AND NOT TARGET Valgrind::Valgrind)
+  add_library(Valgrind::Valgrind INTERFACE IMPORTED)
+  set_target_properties(Valgrind::Valgrind PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${Valgrind_INCLUDE_DIRS}"
   )
 endif ()

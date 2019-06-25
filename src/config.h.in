@@ -14,19 +14,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_H_
-#define _XCP_NG_GENERIC_H_
-
-#include "generic/algorithm.h"
-#include "generic/coroutine.h"
-#include "generic/endian.h"
-#include "generic/file.h"
-#include "generic/io.h"
-#include "generic/math.h"
-#include "generic/network.h"
-#include "generic/stacktrace.h"
-#include "generic/string.h"
+#ifndef _XCP_NG_GENERIC_CONFIG_H_
+#define _XCP_NG_GENERIC_CONFIG_H_
 
 // =============================================================================
 
-#endif // _XCP_NG_GENERIC_H_ included
+#cmakedefine HAVE_VALGRIND @HAVE_VALGRIND@
+
+#endif // _XCP_NG_GENERIC_CONFIG_H_ included
