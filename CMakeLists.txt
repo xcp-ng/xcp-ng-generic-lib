@@ -50,13 +50,22 @@ if (CMAKE_C_COMPILER_ID MATCHES "GNU")
 endif ()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_THREAD_PREFER_PTHREAD YES)
+
+# Required libs.
+set(LIBS)
 
 find_package(Bfd REQUIRED)
+find_package(Threads REQUIRED)
 
-set(LIBS
-  Bfd::Bfd
-  m
-)
+list(APPEND LIBS Bfd::Bfd Threads::Threads m)
+
+# Optional libs.
+find_package(Valgrind)
+if (Valgrind_FOUND)
+  set(HAVE_VALGRIND 1)
+  list(APPEND LIBS Valgrind::Valgrind)
+endif ()
 
 # ------------------------------------------------------------------------------
 # Sources & binary.
@@ -65,6 +74,7 @@ set(LIBS
 add_compile_options(${CUSTOM_C_FLAGS})
 
 set(SOURCES
+  src/coroutine.c
   src/file.c
   src/io.c
   src/network.c
@@ -78,6 +88,7 @@ target_include_directories(${XCP_LIB}
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
+    ${CMAKE_BINARY_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -89,6 +100,8 @@ set_target_properties(${XCP_LIB} PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
   EXPORT_NAME ${XCP_MODULE}
 )
+
+configure_file(src/config.h.in src/config.h @ONLY)
 
 # ------------------------------------------------------------------------------
 # Install.
