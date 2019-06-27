@@ -78,14 +78,14 @@ static inline char *xcp_create_hex_buf (const void *buf, size_t count, bool reve
   if (reverse) {
     char *pos = hexBuf + hexBufSize - 2;
     for (size_t i = 0; i < count; ++i) {
-      const uchar byte = ((unsigned char *)buf)[i];
+      const uchar byte = ((uchar *)buf)[i];
       *pos-- = hex[byte & 0xF];
       *pos-- = hex[byte >> 4];
     }
   } else {
     char *pos = hexBuf + prefixSize;
     for (size_t i = 0; i < count; ++i) {
-      const uchar byte = ((unsigned char *)buf)[i];
+      const uchar byte = ((uchar *)buf)[i];
       *pos++ = hex[byte >> 4];
       *pos++ = hex[byte & 0xF];
     }
