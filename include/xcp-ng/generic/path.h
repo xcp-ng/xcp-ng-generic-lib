@@ -14,20 +14,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _XCP_NG_GENERIC_H_
-#define _XCP_NG_GENERIC_H_
+#ifndef _XCP_NG_PATH_H_
+#define _XCP_NG_PATH_H_
 
-#include "generic/algorithm.h"
-#include "generic/coroutine.h"
-#include "generic/endian.h"
-#include "generic/file.h"
-#include "generic/io.h"
-#include "generic/math.h"
-#include "generic/network.h"
-#include "generic/path.h"
-#include "generic/stacktrace.h"
-#include "generic/string.h"
+#include "xcp-ng/generic/global.h"
 
 // =============================================================================
 
-#endif // _XCP_NG_GENERIC_H_ included
+#ifdef __cplusplus
+extern "C" {
+#endif // ifdef __cplusplus
+
+XCP_NO_DISCARD bool xcp_path_is_abs (const char *pathname);
+
+// Concat pathname with subpath. If subpath is an absolute path, pathname is ignored.
+XCP_NO_DISCARD char *xcp_path_combine (const char *pathname, const char *subpath);
+
+#ifdef __cplusplus
+}
+#endif // ifdef __cplusplus
+
+#endif // _XCP_NG_PATH_H_ included
