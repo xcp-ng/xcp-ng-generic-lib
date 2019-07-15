@@ -78,6 +78,7 @@ set(SOURCES
   src/file.c
   src/io.c
   src/network.c
+  src/path.c
   src/stacktrace.c
   src/string.c
 )
