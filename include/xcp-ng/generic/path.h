@@ -30,6 +30,9 @@ XCP_NO_DISCARD bool xcp_path_is_abs (const char *pathname);
 // Concat pathname with subpath. If subpath is an absolute path, pathname is ignored.
 XCP_NO_DISCARD char *xcp_path_combine (const char *pathname, const char *subpath);
 
+// Like dirname but simpler to use. Just free the returned dir after usage.
+XCP_NO_DISCARD char *xcp_path_parent_dir (const char *pathname);
+
 #ifdef __cplusplus
 }
 #endif // ifdef __cplusplus

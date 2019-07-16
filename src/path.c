@@ -14,6 +14,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,4 +50,71 @@ char *xcp_path_combine (const char *pathname, const char *subpath) {
   memcpy(res + pathnameLen + addSeparator, subpath, subpathLen + 1);
 
   return res;
+}
+
+static inline const char *get_first_slash (const char *start, const char *pos) {
+  const char *p;
+  for (p = pos - 1; p >= start; --p)
+    if (*p != '/')
+      break;
+  return p + 1;
+}
+
+// Examples:
+// "/" => /
+// "/toto" => /
+// "titi/a" => titi
+// "gfrg/grg/" => gfrg
+// "/gfrg/grg/" => /gfrg
+// "////gfrg///grg///" => ////gfrg
+// "///gfrg////grg" => ///gfrg
+// "/gfrg////grg" => /gfrg
+// "titia" => .
+// "/toto/" => /
+// "//" => //
+// "///" => /
+// "////" => /
+// "//a" => //
+// "///b" => /
+// "////c" => /
+// "////c/d" => ////c
+char *xcp_path_parent_dir (const char *pathname) {
+  // 1. Find last slash in pathname.
+  const char *slash = pathname ? strrchr(pathname, '/') : NULL;
+
+  // 2. Slash is not the first char and there is no char after it.
+  // So we are in a directory, we must find the previous '/'.
+  if (slash && slash != pathname && slash[1] == '\0') {
+    const char *p = get_first_slash(pathname, slash);
+    if (p != pathname)
+      slash = memrchr(pathname, '/', (size_t)(p - pathname));
+  }
+
+  // 3. If there is no slash, return default '.' path.
+  if (!slash) {
+    char *dir = malloc(2);
+    if (!dir) return NULL;
+    dir[0] = '.';
+    dir[1] = '\0';
+    return dir;
+  }
+
+  const char *p = get_first_slash(pathname, slash);
+  if (p == pathname) {
+    // Preserve two consecutives slashes or keep only one slash in other cases.
+    // See: http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html
+    // 4.11 Pathname Resolution
+    // "A pathname that begins with two successive slashes may be interpreted in
+    // an implementation-defined manner, although more than two leading slashes shall
+    // be treated as a single slash."
+    slash = (slash == pathname + 1) ? slash + 1 : pathname + 1;
+  } else
+    slash = p;
+
+  const size_t len = (size_t)(slash - pathname);
+  char *dir = strndup(pathname, len + 1);
+  if (dir)
+    dir[len] = '\0';
+
+  return dir;
 }
