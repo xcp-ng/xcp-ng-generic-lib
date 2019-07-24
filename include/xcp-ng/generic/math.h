@@ -41,6 +41,8 @@ extern "C" {
 #define XCP_ROUND_UP_2(X, Y) ((((X) - 1) | __XCP_ROUND_MASK_2(X, Y)) + 1)
 #define XCP_ROUND_DOWN_2(X, Y) ((X) & ~__XCP_ROUND_MASK_2(X, Y))
 
+#define XCP_ROUND_UP(X, Y) ((((X) + (Y) - 1) / (Y)) * (Y))
+
 #define XCP_DIV_ROUND_UP(X, Y) ((X) / (Y) + (((X) % (Y) != 0) ? !(((X) > 0) ^ ((Y) > 0)) : 0))
 
 #ifdef __cplusplus
