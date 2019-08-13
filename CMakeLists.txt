@@ -21,6 +21,12 @@
 cmake_minimum_required(VERSION 3.13.1)
 
 # ------------------------------------------------------------------------------
+# Options.
+# ------------------------------------------------------------------------------
+
+option(BUILD_SHARED_LIBS ON)
+
+# ------------------------------------------------------------------------------
 # Config & flags.
 # ------------------------------------------------------------------------------
 
@@ -82,7 +88,12 @@ set(SOURCES
   src/stacktrace.c
   src/string.c
 )
-add_library(${XCP_LIB} SHARED ${SOURCES})
+
+if (BUILD_SHARED_LIBS)
+  add_library(${XCP_LIB} SHARED ${SOURCES})
+else ()
+  add_library(${XCP_LIB} STATIC ${SOURCES})
+endif ()
 
 target_include_directories(${XCP_LIB}
   PUBLIC
@@ -145,9 +156,14 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config/${XCP_CONFIG_FILE
   INSTALL_DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
+configure_file(cmake/FindBfd.cmake FindBfd.cmake COPYONLY)
+configure_file(cmake/FindValgrind.cmake FindValgrind.cmake COPYONLY)
+
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_FILE}
   ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_VERSION_FILE}
+  ${CMAKE_CURRENT_BINARY_DIR}/FindBfd.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/FindValgrind.cmake
   DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
