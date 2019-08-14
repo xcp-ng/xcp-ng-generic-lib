@@ -24,7 +24,10 @@ cmake_minimum_required(VERSION 3.13.1)
 # Options.
 # ------------------------------------------------------------------------------
 
-option(BUILD_SHARED_LIBS ON)
+option(BUILD_SHARED_LIBS "Build shared library" ON)
+
+option(ENABLE_STACKTRACE_BFD "Enable BFD to display better stacktraces" ON)
+option(ENABLE_VALGRIND "Enable Valgrind to avoid warnings/errors in specific code" ON)
 
 # ------------------------------------------------------------------------------
 # Config & flags.
@@ -61,16 +64,27 @@ set(CMAKE_THREAD_PREFER_PTHREAD YES)
 # Required libs.
 set(LIBS)
 
-find_package(Bfd REQUIRED)
 find_package(Threads REQUIRED)
-
-list(APPEND LIBS Bfd::Bfd Threads::Threads m)
+list(APPEND LIBS Threads::Threads m)
 
 # Optional libs.
-find_package(Valgrind)
-if (Valgrind_FOUND)
-  set(HAVE_VALGRIND 1)
-  list(APPEND LIBS Valgrind::Valgrind)
+set(FIND_MODULES)
+
+if (ENABLE_STACKTRACE_BFD)
+  find_package(Bfd REQUIRED)
+  if (Bfd_FOUND)
+    list(APPEND LIBS Bfd::Bfd)
+    list(APPEND FIND_MODULES cmake/FindBfd.cmake)
+  endif ()
+endif ()
+
+if (ENABLE_VALGRIND)
+  find_package(Valgrind)
+  if (Valgrind_FOUND)
+    set(HAVE_VALGRIND 1)
+    list(APPEND LIBS Valgrind::Valgrind)
+    list(APPEND FIND_MODULES cmake/FindValgrind.cmake)
+  endif ()
 endif ()
 
 # ------------------------------------------------------------------------------
@@ -85,15 +99,17 @@ set(SOURCES
   src/io.c
   src/network.c
   src/path.c
-  src/stacktrace.c
+  src/stacktrace/stacktrace.c
   src/string.c
 )
 
-if (BUILD_SHARED_LIBS)
-  add_library(${XCP_LIB} SHARED ${SOURCES})
+if (Bfd_FOUND)
+  list(APPEND SOURCES src/stacktrace/platform/bfd-stacktrace.c)
 else ()
-  add_library(${XCP_LIB} STATIC ${SOURCES})
+  list(APPEND SOURCES src/stacktrace/platform/std-stacktrace.c)
 endif ()
+
+add_library(${XCP_LIB} ${SOURCES})
 
 target_include_directories(${XCP_LIB}
   PUBLIC
@@ -156,16 +172,25 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config/${XCP_CONFIG_FILE
   INSTALL_DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
 
-configure_file(cmake/FindBfd.cmake FindBfd.cmake COPYONLY)
-configure_file(cmake/FindValgrind.cmake FindValgrind.cmake COPYONLY)
+if (NOT BUILD_SHARED_LIBS)
+  if (Bfd_FOUND)
+    configure_file(cmake/FindBfd.cmake FindBfd.cmake COPYONLY)
+  endif ()
+
+  if (Valgrind_FOUND)
+    configure_file(cmake/FindValgrind.cmake FindValgrind.cmake COPYONLY)
+  endif ()
+endif ()
 
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_FILE}
   ${CMAKE_CURRENT_BINARY_DIR}/${XCP_CONFIG_VERSION_FILE}
-  ${CMAKE_CURRENT_BINARY_DIR}/FindBfd.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/FindValgrind.cmake
   DESTINATION ${XCP_INSTALL_CONFIGDIR}
 )
+
+foreach (FIND_MODULE ${FIND_MODULES})
+  install(FILES ${FIND_MODULE} DESTINATION ${XCP_INSTALL_CONFIGDIR})
+endforeach ()
 
 export(EXPORT ${XCP_TARGETS} FILE ${CMAKE_CURRENT_BINARY_DIR}/${XCP_TARGETS_FILE} NAMESPACE ${XCP_NAMESPACE}::)
 

@@ -43,7 +43,7 @@ int xcp_clear_crash_handler ();
 
 // Similar to the GNU backstrace API.
 // The file name and line number of each frame is displayed in the trace contrary to
-// the backtrace_symbols function.
+// the backtrace_symbols function (if built with BFD).
 // See: man 3 backtrace
 //
 // Basic example:
