@@ -1,13 +1,19 @@
 get_filename_component(XCP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
 if (NOT TARGET @XCP_NAMESPACE@::@XCP_MODULE@)
-  include("${CMAKE_CURRENT_LIST_DIR}/FindBfd.cmake")
-  include("${CMAKE_CURRENT_LIST_DIR}/FindValgrind.cmake")
+  if (NOT @BUILD_SHARED_LIBS@) # if NOT ${BUILD_SHARED_LIBS}
+    if (@Bfd_FOUND@)
+      include("${XCP_CMAKE_DIR}/FindBfd.cmake")
+    endif ()
 
-  include(CMakeFindDependencyMacro)
-  set(CMAKE_THREAD_PREFER_PTHREAD YES)
-  find_dependency(Threads REQUIRED)
+    if (@Valgrind_FOUND@)
+      include("${XCP_CMAKE_DIR}/FindValgrind.cmake")
+    endif ()
 
+    include(CMakeFindDependencyMacro)
+    set(CMAKE_THREAD_PREFER_PTHREAD YES)
+    find_dependency(Threads REQUIRED)
+  endif ()
   include("${XCP_CMAKE_DIR}/@XCP_TARGETS_FILE@")
 endif ()
 

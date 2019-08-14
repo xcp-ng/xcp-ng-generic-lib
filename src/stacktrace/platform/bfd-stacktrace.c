@@ -16,23 +16,18 @@
 
 #define _GNU_SOURCE
 #include <assert.h>
-#include <execinfo.h>
 #include <inttypes.h>
 #include <link.h>
 #include <math.h>
-#include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #define PACKAGE 1
 #include <bfd.h>
 
-#include "xcp-ng/generic/io.h"
+#include "xcp-ng/generic/file.h"
 #include "xcp-ng/generic/math.h"
 #include "xcp-ng/generic/stacktrace.h"
-#include "xcp-ng/generic/file.h"
 
 #define HEX_ADDRESS_LEN ((int)(sizeof(uintptr_t) * 2))
 
@@ -262,56 +257,8 @@ fail:
   return NULL;
 }
 
-static void default_crash_handler (int signal) {
-  xcp_set_crash_handler(SIG_DFL);
-
-  void *buffer[128];
-  const int size = xcp_stacktrace(buffer, XCP_ARRAY_LEN(buffer));
-  xcp_stacktrace_symbols_fd(buffer, (size_t)size, STDERR_FILENO);
-  _exit(128 + signal);
-}
-
 // -----------------------------------------------------------------------------
-
-int xcp_set_default_crash_handler () {
-  return xcp_set_crash_handler(default_crash_handler);
-}
-
-int xcp_set_crash_handler (XcpCrashHandler handler) {
-  signal(SIGBUS, handler);
-  signal(SIGFPE, handler);
-  signal(SIGILL, handler);
-  signal(SIGPIPE, handler);
-  signal(SIGSEGV, handler);
-  signal(SIGSYS, handler);
-  signal(SIGTRAP, handler);
-  signal(SIGXCPU, handler);
-  signal(SIGXFSZ, handler);
-
-  return 0;
-}
-
-int xcp_clear_crash_handler () {
-  return xcp_set_crash_handler(SIG_DFL);
-}
-
-int xcp_stacktrace (void **buffer, size_t size) {
-  return backtrace(buffer, (int)size);
-}
 
 char **xcp_stacktrace_symbols (void *const *buffer, size_t size) {
   return stacktrace_symbols(buffer, size);
-}
-
-int xcp_stacktrace_symbols_fd (void *const *buffer, size_t size, int fd) {
-  char **strings = xcp_stacktrace_symbols(buffer, size);
-  if (!strings)
-    return -1;
-
-  for (size_t i = 0; i < size; ++i)
-    dprintf(fd, "%s\n", strings[i]);
-
-  free(strings);
-
-  return 0;
 }
