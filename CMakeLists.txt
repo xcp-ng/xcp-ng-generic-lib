@@ -127,6 +127,7 @@ set_target_properties(${XCP_LIB} PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
   EXPORT_NAME ${XCP_MODULE}
+  POSITION_INDEPENDENT_CODE ON
 )
 
 configure_file(src/config.h.in src/config.h @ONLY)
