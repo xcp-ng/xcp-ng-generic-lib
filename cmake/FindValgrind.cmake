@@ -23,7 +23,6 @@
 # This will define the following variables:
 #   Valgrind_FOUND
 #   Valgrind_INCLUDE_DIRS
-#   Valgrind_LIBRARIES
 #
 # and the following imported targets:
 #   Valgrind::Valgrind
