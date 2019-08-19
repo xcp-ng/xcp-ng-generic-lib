@@ -67,7 +67,11 @@
 #if defined(XCP_C_CLANG)
   #define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER XCP_C_WARN_DISABLE_CLANG("-Waddress-of-packed-member")
 #elif defined(XCP_C_GNU)
-  #define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER XCP_C_WARN_DISABLE_GCC("-Waddress-of-packed-member")
+  #if __GNUC__ >= 9
+    #define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER XCP_C_WARN_DISABLE_GCC("-Waddress-of-packed-member")
+  #else
+    #define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER
+  #endif // if __GNUC__ >= 9
 #else
   #define XCP_C_WARN_DISABLE_ADDRESS_OF_PACKED_MEMBER
 #endif // if defined(XCP_C_CLANG)
