@@ -46,7 +46,9 @@
 
 // -----------------------------------------------------------------------------
 
-#define XCP_DECL_UNUSED __attribute__((__unused__))
+#ifndef XCP_DECL_UNUSED
+  #define XCP_DECL_UNUSED __attribute__((__unused__))
+#endif // ifndef XCP_DECL_UNUSED
 
 #if defined(__cplusplus) && __cplusplus >= 201703L
   #define XCP_NO_DISCARD [[ nodiscard ]]
@@ -54,7 +56,9 @@
   #define XCP_NO_DISCARD
 #endif // if defined(__cplusplus) && __cplusplus >= 201703L
 
-#define XCP_UNUSED(ARG) ((void)ARG)
+#ifndef XCP_UNUSED
+  #define XCP_UNUSED(ARG) ((void)ARG)
+#endif // ifndef XCP_UNUSED
 
 // -----------------------------------------------------------------------------
 
