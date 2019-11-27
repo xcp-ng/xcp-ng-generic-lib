@@ -36,6 +36,16 @@
 
 // -----------------------------------------------------------------------------
 
+#ifndef XCP_LIKELY
+  #define XCP_LIKELY(EXPRESSION) __builtin_expect(!!(EXPRESSION), true)
+#endif // ifndef XCP_LIKELY
+
+#ifndef XCP_UNLIKELY
+  #define XCP_UNLIKELY(EXPRESSION) __builtin_expect(!!(EXPRESSION), false)
+#endif // ifndef XCP_UNLIKELY
+
+// -----------------------------------------------------------------------------
+
 #define XCP_DECL_UNUSED __attribute__((__unused__))
 
 #if defined(__cplusplus) && __cplusplus >= 201703L
