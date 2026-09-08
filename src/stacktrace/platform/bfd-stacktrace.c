@@ -86,15 +86,15 @@ static int read_symbols (bfd *bin, asymbol ***symbols) {
 // -----------------------------------------------------------------------------
 
 static bool find_physical_address_info (bfd *bin, asection *section, asymbol **symbols, SymbolInfo *info) {
-  if ((bfd_get_section_flags(bin, section) & SEC_ALLOC) == 0)
+  if ((bfd_section_flags(section) & SEC_ALLOC) == 0)
     return false; // No debug info in this section.
 
   const bfd_vma physAddress = (bfd_vma)info->physAddress;
-  const bfd_vma vma = bfd_get_section_vma(bin, section);
+  const bfd_vma vma = bfd_section_vma(section);
   if (physAddress < vma)
     return false;
 
-  const bfd_size_type size = bfd_section_size(bin, section);
+  const bfd_size_type size = bfd_section_size(section);
   if (physAddress >= vma + size)
     return false;
 
