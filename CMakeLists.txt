@@ -33,7 +33,7 @@ option(ENABLE_VALGRIND "Enable Valgrind to avoid warnings/errors in specific cod
 # Config & flags.
 # ------------------------------------------------------------------------------
 
-project(xcp-ng-generic VERSION 1.2.0 LANGUAGES C)
+project(xcp-ng-generic VERSION 1.2.1 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 
 set(XCP_LIB xcp-ng-generic)
